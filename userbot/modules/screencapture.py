@@ -32,7 +32,7 @@ async def captur(shots):
             chrome_options.binary_location = GOOGLE_CHROME_BIN
             await shots.edit("Starting Google Chrome BIN")
             driver = webdriver.Chrome(chrome_options=chrome_options)
-            input_str = capture.pattern_match.group(1)
+            input_str = shots.pattern_match.group(1)
             driver.get(input_str)
             await shots.edit("Opening web-page")
             im_png = driver.get_screenshot_as_png()
