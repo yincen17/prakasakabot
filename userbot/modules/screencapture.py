@@ -9,8 +9,8 @@ from userbot.events import register
 from userbot import GOOGLE_CHROME_BIN
 
 
-@register(outgoing=True, pattern="^.sc(?: |$)(.*)")
-async captur(shots):
+@register(pattern=r".sc (.*)", outgoing=True)
+async def captur(shots):
     """ For .sc command, Capture any Site via Url."""
     if not shots.text[0].isalpha() and shots.text[0] not in ("/", "#", "@", "!"):
         if shots.fwd_from:
