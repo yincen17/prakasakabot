@@ -6,7 +6,7 @@ from datetime import datetime
 from selenium import webdriver
 from telethon import events
 from userbot.events import register
-from userbot import GOOGLE_CHROME_BIN
+from userbot import GOOGLE_CHROME_BIN, CMD_HELP
 
 
 @register(pattern=r".sc (.*)", outgoing=True)
