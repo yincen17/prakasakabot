@@ -30,15 +30,15 @@ async def captur(shots):
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.binary_location = GOOGLE_CHROME_BIN
-            await shots.edit("Starting Google Chrome BIN")
+            await shots.edit("Processing 30%")
             driver = webdriver.Chrome(chrome_options=chrome_options)
             input_str = shots.pattern_match.group(1)
             driver.get(input_str)
-            await shots.edit("Opening web-page")
+            await shots.edit("Processing 50%")
             im_png = driver.get_screenshot_as_png()
             # saves screenshot of entire page
             driver.close()
-            await shots.edit("Stopping Google Chrome BIN")
+            await shots.edit("Processing 90%")
             message_id = shots.message.id
             if shots.reply_to_msg_id:
                 message_id = shots.reply_to_msg_id
@@ -55,7 +55,7 @@ async def captur(shots):
                 )
             end = datetime.now()
             duration = (end - start).seconds
-            await shots.edit(f"Completed screencapture Process in {duration} seconds")
+            await shots.edit(f"Screencaptured in {duration} seconds")
         except Exception:
             await shots.edit(traceback.format_exc())
            
