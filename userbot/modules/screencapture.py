@@ -56,7 +56,7 @@ async def captur(shots):
             end = datetime.now()
             duration = (end - start).seconds
             await shots.edit(f"Completed screencapture Process in {duration} seconds")
-         except Exception:
+        except Exception:
             await shots.edit(traceback.format_exc())
            
            
