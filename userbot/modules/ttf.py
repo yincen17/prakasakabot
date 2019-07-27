@@ -10,7 +10,7 @@ async def get(event):
     with open(name, "w") as f:
         f.write(m.message)
     await event.delete()
-    await bot.send_file(event.chat_id,name,force_document=True)
+    await event.client.send_file(event.chat_id,name,force_document=True)
 	
              
              
