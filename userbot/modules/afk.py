@@ -162,10 +162,10 @@ async def type_afk_is_not_true(notafk):
                     "`" +
                     str(USERS[i]) +
                     " messages`",
-                )
-        COUNT_MSG = 0
-        USERS = {}
-        delgvar("AFKREASON")
+            )
+            COUNT_MSG = 0
+            USERS = {}
+            delgvar("AFKREASON")
 
 CMD_HELP.update({
     "afk": ".afk <reason> (reason is optional)\
