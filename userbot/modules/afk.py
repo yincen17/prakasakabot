@@ -126,6 +126,9 @@ async def set_afk(afk_e):
         ISAFK = gvarstatus("AFK_STATUS")
         AFKREASON = gvarstatus("AFK_REASON")
         REASON = afk_e.pattern_match.group(1)
+        if REASON:
+            addgvar("AFK_REASON", REASON)
+            await afk_e.edit(f"Message Saved")
         if BOTLOG:
             await afk_e.client.send_message(BOTLOG_CHATID, "You went AFK!")
         addgvar("AFK_STATUS", True)
