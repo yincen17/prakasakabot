@@ -129,6 +129,7 @@ async def set_afk(afk_e):
         if REASON:
             addgvar("AFK_REASON", REASON)
             await afk_e.edit(f"Message Saved")
+        await sleep(2)
         await afk_e.delete()
         if BOTLOG:
             await afk_e.client.send_message(BOTLOG_CHATID, "You went AFK!")
