@@ -118,7 +118,7 @@ async def afk_on_pm(sender):
                     COUNT_MSG = COUNT_MSG + 1
 
 
-@register(outgoing=True, pattern="^.afk(?: |$)(.*)")
+@register(outgoing=True, pattern="^.msg(?: |$)(.*)")
 async def set_afk(afk_e):
     """ For .afk command, allows you to inform people that you are afk when they message you """
     if not afk_e.text[0].isalpha() and afk_e.text[0] not in ("/", "#", "@", "!"):
@@ -129,6 +129,8 @@ async def set_afk(afk_e):
         if REASON:
             addgvar("AFK_REASON", REASON)
             await afk_e.edit(f"Message Saved")
+        await asyncio.sleep(2)
+        await afk_e.delete()
         if BOTLOG:
             await afk_e.client.send_message(BOTLOG_CHATID, "You went AFK!")
         addgvar("AFK_STATUS", True)
