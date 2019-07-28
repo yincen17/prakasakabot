@@ -56,7 +56,7 @@ async def mention_afk(mention):
             if mention.sender_id not in USERS:
                 if AFKREASON:
                     await mention.reply(
-                        f"{AFKREASON}"
+                        f"Sorry! I am AFK because of `{AFKREASON}`. I'll have a look at this as soon as I come back."
                     )
                 else:
                     await mention.reply(
@@ -68,7 +68,7 @@ async def mention_afk(mention):
                 if USERS[mention.sender_id] % 5 == 0:
                     if AFKREASON:
                         await mention.reply(
-                            f"{AFKREASON}"
+                            f"Sorry! But I'm still not back yet. Currently busy with `{AFKREASON}`."
                         )
                     else:
                         await mention.reply(
@@ -93,7 +93,7 @@ async def afk_on_pm(sender):
             if sender.sender_id not in USERS:
                 if AFKREASON:
                     await sender.reply(
-                        f"{AFKREASON}"
+                        f"Sorry! I am AFK due to `{AFKREASON}`. I'll respond as soon I come back."
                     )
                 else:
                     await sender.reply(
@@ -105,7 +105,7 @@ async def afk_on_pm(sender):
                 if USERS[sender.sender_id] % 2 == 0:
                     if AFKREASON:
                         await sender.reply(
-                            f"{AFKREASON}"
+                            f"Sorry! But I'm still not back yet. Currently busy with `{AFKREASON}`."
                         )
                     else:
                         await sender.reply(
@@ -118,7 +118,7 @@ async def afk_on_pm(sender):
                     COUNT_MSG = COUNT_MSG + 1
 
 
-@register(outgoing=True, pattern="^.msg(?: |$)(.*)")
+@register(outgoing=True, pattern="^.afk(?: |$)(.*)")
 async def set_afk(afk_e):
     """ For .afk command, allows you to inform people that you are afk when they message you """
     if not afk_e.text[0].isalpha() and afk_e.text[0] not in ("/", "#", "@", "!"):
@@ -128,9 +128,9 @@ async def set_afk(afk_e):
         REASON = afk_e.pattern_match.group(1)
         if REASON:
             addgvar("AFK_REASON", REASON)
-            await afk_e.edit(f"Message Saved")
-        await sleep(2)
-        await afk_e.delete()
+            await afk_e.edit(f"Going AFK !!\nReason: {REASON}")
+        else:
+            await afk_e.edit("Going AFK !!")
         if BOTLOG:
             await afk_e.client.send_message(BOTLOG_CHATID, "You went AFK!")
         addgvar("AFK_STATUS", True)
@@ -144,7 +144,18 @@ async def type_afk_is_not_true(notafk):
     global COUNT_MSG
     global USERS
     AFKREASON = gvarstatus("AFK_REASON")
-    if BOTLOG:
+    if ISAFK:
+        delgvar("AFK_STATUS")
+        await notafk.respond("I'm no longer AFK.")
+        delgvar("AFK_REASON")
+        afk_info = await notafk.respond(
+            "`You recieved " +
+            str(COUNT_MSG) +
+            " messages while you were away. Check log for more details.`"
+        )
+        await sleep(4)
+        await afk_info.delete()
+        if BOTLOG:
             await notafk.client.send_message(
                 BOTLOG_CHATID,
                 "You've recieved " +
@@ -167,10 +178,10 @@ async def type_afk_is_not_true(notafk):
                     "`" +
                     str(USERS[i]) +
                     " messages`",
-            )
-            COUNT_MSG = 0
-            USERS = {}
-            delgvar("AFKREASON")
+                )
+        COUNT_MSG = 0
+        USERS = {}
+        delgvar("AFKREASON")
 
 CMD_HELP.update({
     "afk": ".afk <reason> (reason is optional)\
