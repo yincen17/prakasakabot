@@ -66,27 +66,25 @@ async def add_filter(fltr):
             return
 
         notename = fltr.pattern_match.group(1)
-        msg = fltr.text.partition(notename)[2]
-        if fltr.reply_to_msg_id:
-            msg = " " + (await fltr.get_reply_message()).text
-            if msg:
-                snip = {'type': TYPE_TEXT, 'text': msg.message or ''}
-                if msg.media:
+        msg = await fltr.get_reply_message()
+        if msg:
+            snip = {'type': TYPE_TEXT, 'text': msg.message or ''}
+            if msg.media:
                     media = None
                     if isinstance(msg.media, types.MessageMediaPhoto):
-                        media = utils.get_input_photo(msg.media.photo)
-                        snip['type'] = TYPE_PHOTO
-                elif isinstance(msg.media, types.MessageMediaDocument):
-                        media = utils.get_input_document(msg.media.document)
-                        snip['type'] = TYPE_DOCUMENT
-                if media:
-                        snip['id'] = media.id
-                        snip['hash'] = media.access_hash
-                        snip['fr'] = media.file_reference
+                    media = utils.get_input_photo(msg.media.photo)
+                    snip['type'] = TYPE_PHOTO
+            elif isinstance(msg.media, types.MessageMediaDocument):
+                    media = utils.get_input_document(msg.media.document)
+                    snip['type'] = TYPE_DOCUMENT
+            if media:
+                    snip['id'] = media.id
+                    snip['hash'] = media.access_hash
+                    snip['fr'] = media.file_reference
 
         success = "`Note {} successfully. Use` #{} `to get it`"
         
-        if add_note(str(fltr.chat_id), notename, msg, snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr')) is False:
+        if add_note(str(fltr.chat_id), notename, snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr')) is False:
             return await fltr.edit(success.format('updated', notename))
         else:
             return await fltr.edit(success.format('added', notename))
