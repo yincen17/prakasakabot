@@ -26,7 +26,7 @@ from userbot.modules.download import progress
 
 @register(outgoing=True, pattern=r"^.rbg (.*)")
 async def kbg(remob):
-""" For .rbg command, Remove Image Background. """
+    """ For .rbg command, Remove Image Background. """
     if not remob.text[0].isalpha() and remob.text[0] not in ("/", "#", "@", "!"):
         if remob.fwd_from:
             return
