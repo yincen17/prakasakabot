@@ -25,7 +25,7 @@ from userbot import CMD_HELP, REM_BG_API_KEY, TEMP_DOWNLOAD_DIRECTORY
 from userbot.modules.download import progress
 
 
-@register(outgoing=True, pattern=r"^.rbg (.*)")
+@register(pattern=r".rbg (.*)", outgoing=True)
 async def kbg(remob):
     """ For .rbg command, Remove Image Background. """
     if not remob.text[0].isalpha() and remob.text[0] not in ("/", "#", "@", "!"):
