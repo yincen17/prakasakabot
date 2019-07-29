@@ -22,7 +22,7 @@ from telethon.tl.types import (ChannelParticipantsAdmins, ChatAdminRights,
                                ChatBannedRights, MessageEntityMentionName,
                                MessageMediaPhoto)
 
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot
+from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
 
 # =================== CONSTANT ===================
@@ -94,9 +94,9 @@ async def set_group_photo(gpic):
 
         if replymsg and replymsg.media:
             if isinstance(replymsg.media, MessageMediaPhoto):
-                photo = await bot.download_media(message=replymsg.photo)
+                photo = await gpic.client.download_media(message=replymsg.photo)
             elif "image" in replymsg.media.document.mime_type.split('/'):
-                photo = await bot.download_file(replymsg.media.document)
+                photo = await gpic.client.download_file(replymsg.media.document)
             else:
                 await gpic.edit(INVALID_MEDIA)
 
@@ -104,7 +104,7 @@ async def set_group_photo(gpic):
             try:
                 await EditPhotoRequest(
                     gpic.chat_id,
-                    await bot.upload_file(photo)
+                    await gpic.client.upload_file(photo)
                 )
                 await gpic.edit(CHAT_PP_CHANGED)
 
