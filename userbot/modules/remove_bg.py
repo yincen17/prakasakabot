@@ -20,6 +20,7 @@ from datetime import datetime
 import io
 import os
 import requests
+from userbot.events import register
 from userbot import CMD_HELP, REM_BG_API_KEY, TEMP_DOWNLOAD_DIRECTORY
 from userbot.modules.download import progress
 
