@@ -107,6 +107,9 @@ TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TEMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS
 
 TELEGRAPH_SHORT_NAME = os.environ.get("TELEGRAPH_SHORT_NAME", "Paper")
 
+#Remove_BG
+REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
+
 if STRING_SESSION:
     # pylint: disable=invalid-name
     bot = TelegramClient(StringSession(STRING_SESSION), API_KEY, API_HASH)
