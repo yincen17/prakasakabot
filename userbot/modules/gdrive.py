@@ -172,7 +172,7 @@ async def download(dryb):
                 end = datetime.now()
                 duration = (end - start).seconds
                 required_file_name = input_str
-                await dryb.edit("Found `{}` in {} seconds, uploading to Google Drive !!".format(input_str, duration))
+                await dryb.edit("Found `{}` in {} seconds, Now Uploading to Google Drive !!".format(input_str, duration))
             else:
                 await dryb.edit("File not found in local server. Give me a valid file path !!")
                 return False
@@ -194,7 +194,7 @@ async def download(dryb):
                 required_file_name = downloaded_file_name
                 duration = (end - start).seconds
                 await dryb.edit(
-                    "Downloaded to `{}` in {} seconds.\nNow uploading to GDrive...".format(
+                    "Downloaded to `{}` in {} seconds.\nNow Uploading to Google Drive...".format(
                         downloaded_file_name, duration)
                 )
     if required_file_name:
@@ -213,7 +213,7 @@ async def download(dryb):
         # Sometimes API fails to retrieve starting URI, we wrap it.
         try:
             g_drive_link = await upload_file(http, required_file_name, file_name, mime_type, dryb)
-            await dryb.edit(f"File:`{required_file_name}`\nwas successfully uploaded to [Google Drive]({g_drive_link})!")
+            await dryb.edit(f"Your File:`{required_file_name}`\nHas Successfully Uploaded to ==> [Google Drive]({g_drive_link})!")
         except Exception as e:
             await dryb.edit(f"Error while uploading to Google Drive\nError Code:\n`{e}`")
 
@@ -335,7 +335,7 @@ async def _(event):
     if event.fwd_from:
         return
     folder_link = "https://drive.google.com/drive/u/2/folders/"+parent_id
-    await event.edit("Your current Google Drive upload directory: \n"+folder_link)
+    await event.edit("**Your Google Drive Folder** ==> [Link]({folder_link})")
 
 
 CMD_HELP.update({
