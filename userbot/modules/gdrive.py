@@ -166,6 +166,17 @@ async def download(dryb):
                 await dryb.edit(
                     "Incorrect URL\n{}".format(url)
                 )
+        elif input_str:
+            input_str = input_str.strip()
+            if os.path.exists(input_str):
+                start = datetime.now()
+                end = datetime.now()
+                duration = (end - start).seconds
+                required_file_name = input_str
+                await dryb.edit("Found `{}` in {} seconds, uploading to Google Drive !!".format(input_str, duration))
+            else:
+                await dryb.edit("File not found in local server. Give me a valid file path !!")
+                return False
         elif message.media:
             start = datetime.now()
             try:
