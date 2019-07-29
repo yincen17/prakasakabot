@@ -17,6 +17,7 @@ from telethon.errors.rpcerrorlist import (UserIdInvalidError,
 from telethon.tl.functions.channels import (EditAdminRequest,
                                             EditBannedRequest,
                                             EditPhotoRequest)
+from telethon.tl.function.photos import UploadGroupPhotoRequest
 from telethon.tl.functions.messages import UpdatePinnedMessageRequest
 from telethon.tl.types import (ChannelParticipantsAdmins, ChatAdminRights,
                                ChatBannedRights, MessageEntityMentionName,
@@ -102,7 +103,7 @@ async def set_group_photo(gpic):
 
         if photo:
             try:
-                await EditPhotoRequest(
+                await UploadGroupPhotoRequest(
                     gpic.chat_id,
                     await gpic.client.upload_file(photo)
                 )
