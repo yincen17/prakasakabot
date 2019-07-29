@@ -84,9 +84,11 @@ async def set_group_photo(gpic):
     if not gpic.text[0].isalpha() and gpic.text[0] not in ("/", "#", "@", "!"):
         replymsg = await gpic.get_reply_message()
         chat = await gpic.get_chat()
+        admin = chat.admin_rights
+        creator = chat.creator
         photo = None
 
-        if not chat.admin_rights or chat.creator:
+        if not admin and not creator:
             await gpic.edit(NO_ADMIN)
             return
 
