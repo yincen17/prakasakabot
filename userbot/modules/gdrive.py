@@ -10,6 +10,7 @@ import os
 import time
 from telethon import events
 from datetime import datetime
+from pySmartDL import SmartDL
 from apiclient.discovery import build
 from apiclient.http import MediaFileUpload
 from apiclient.errors import ResumableUploadError
