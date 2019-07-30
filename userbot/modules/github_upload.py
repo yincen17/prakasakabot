@@ -28,7 +28,7 @@ async def download(gomitgo):
 	if GIT_REPO_NAME is None:
 		await gomitgo.edit("`Please ADD Proper Github Repo Name of your userbot`")
 		return 
-        mone = await gomitgo.reply("Processing ...")
+        await gomitgo.reply("Processing ...")
 	input_str = gomitgo.pattern_match.group(1)
 	if not os.path.isdir(GIT_TEMP_DIR):
 		os.makedirs(GIT_TEMP_DIR)
@@ -40,17 +40,17 @@ async def download(gomitgo):
 			reply_message,
 			GIT_TEMP_DIR,
 			progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-			progress(d, t, mone, c_time, "trying to download")
+			progress(d, t, gomitgo, c_time, "trying to download")
 			)
 		)
 	except Exception as e: 
-		await mone.edit(str(e))
+		await gomitgo.edit(str(e))
 	else:
 		end = datetime.now()
 		duration = (end - start).seconds
 		await gomitgo.delete()
-		await mone.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, duration))
-		await mone.edit("Committing to Github....")
+		await gomitgo.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, duration))
+		await gomitgo.edit("Committing to Github....")
 		await git_commit(downloaded_file_name,mone)
 
 async def git_commit(file_name,mone):        
@@ -69,7 +69,7 @@ async def git_commit(file_name,mone):
 	for i in content_list:
 		create_file = True
 		if i == 'ContentFile(path="'+file_name+'")':
-			return await mone.edit("`File Already Exists`")
+			return await gomitgo.edit("`File Already Exists`")
 			create_file = False
 	file_name = "userbot/modules/"+file_name		
 	if create_file == True:
@@ -78,9 +78,9 @@ async def git_commit(file_name,mone):
 		try:
 			repo.create_file(file_name, "Uploaded New Module", commit_data, branch="master")
 			print("Committed File")
-			await mone.edit("`Committed on Your Github Repo.`")
+			await gomotgo.edit("`Committed on Your Github Repo.`")
 		except:
 			print("Cannot Create Plugin")
-			await mone.edit("Cannot Upload Plugin")
+			await gomitgo.edit("Cannot Upload Plugin")
 	else:
-		return await mone.edit("`Committed Suicide`")
+		return await gomitgo.edit("`Committed Suicide`")
