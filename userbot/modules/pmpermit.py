@@ -172,16 +172,16 @@ async def approvepm(apprvpm):
             approve(uid)
         except IntegrityError:
             await apprvpm.edit("`User may already be approved.`")
-            await message.delete()
+            await apprvpm.delete()
             return
 
         await apprvpm.edit(
             f"[{name0}](tg://user?id={uid}) `approved to PM!`"
         )
-        await message.delete()
+        await apprvpm.delete()
         
         async for message in apprvpm.client.iter_messages(apprvpm.chat_id, from_user='me', search=UNAPPROVED_MSG):
-            await message.delete()
+            await apprvpm.delete()
 
         if BOTLOG:
             await apprvpm.client.send_message(
