@@ -131,7 +131,6 @@ async def set_afk(afk_e):
             await afk_e.edit(f"Going AFK !!\nReason: {REASON}")
         else:
             await afk_e.edit("Going AFK !!")
-            await message.delete()
         if BOTLOG:
             await afk_e.client.send_message(BOTLOG_CHATID, "You went AFK!")
         addgvar("AFK_STATUS", True)
@@ -148,7 +147,6 @@ async def type_afk_is_not_true(notafk):
     if ISAFK:
         delgvar("AFK_STATUS")
         await notafk.respond("I'm no longer AFK.")
-        await message.delete()
         delgvar("AFK_REASON")
         afk_info = await notafk.respond(
             "`You recieved " +
