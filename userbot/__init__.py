@@ -110,9 +110,6 @@ TELEGRAPH_SHORT_NAME = os.environ.get("TELEGRAPH_SHORT_NAME", "Paper")
 #Remove_BG
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
 
-#Github_upload
-GITHUB_ACCESS_TOKEN = os.environ.get("GITHUB_ACCESS_TOKEN", None)
-GIT_REPO_NAME = os.environ.get("GIT_REPO_NAME", None)
   
 
 if STRING_SESSION:
