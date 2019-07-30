@@ -10,7 +10,6 @@ async def _(event):
     if event.is_private:
         await event.edit("`.invite` users to a chat, not to a Private Message")
     else:
-        logger.info(to_add_users)
         if not event.is_channel and event.is_group:
             # https://lonamiwebs.github.io/Telethon/methods/messages/add_chat_user.html
             for user_id in to_add_users.split(" "):
