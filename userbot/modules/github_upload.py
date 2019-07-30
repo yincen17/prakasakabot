@@ -51,9 +51,9 @@ async def download(gomitgo):
 		await gomitgo.delete()
 		await gomitgo.edit("Downloaded to `{}` in {} seconds.".format(downloaded_file_name, duration))
 		await gomitgo.edit("Committing to Github....")
-		await git_commit(downloaded_file_name,mone)
+		await git_commit(downloaded_file_name,gomitgo)
 
-async def git_commit(file_name,mone):        
+async def git_commit(file_name,gomitgo):        
 	content_list = []
 	access_token = GITHUB_ACCESS_TOKEN
 	g = Github(access_token)
