@@ -21,7 +21,6 @@ async def _(event):
                         event.chat_id,
                         cws.previous_welcome
                     )
-                except Exception as e:  # pylint:disable=C0103,W0703
             a_user = await event.get_user()
             current_saved_welcome_message = cws.custom_welcome_message
             mention = "[{}](tg://user?id={})".format(a_user.first_name, a_user.id)
