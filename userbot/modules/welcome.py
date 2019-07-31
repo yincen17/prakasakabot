@@ -20,7 +20,7 @@ async def _(event):
                     await event.client.delete_messages(  # pylint:disable=E0602
                         event.chat_id,
                         cws.previous_welcome
-                    )
+            )
             a_user = await event.get_user()
             current_saved_welcome_message = cws.custom_welcome_message
             mention = "[{}](tg://user?id={})".format(a_user.first_name, a_user.id)
