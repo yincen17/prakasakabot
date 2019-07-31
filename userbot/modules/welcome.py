@@ -20,15 +20,15 @@ async def _(event):
                     await event.client.delete_messages(  # pylint:disable=E0602
                         event.chat_id,
                         cws.previous_welcome
-            )
-            a_user = await event.get_user()
-            current_saved_welcome_message = cws.custom_welcome_message
-            mention = "[{}](tg://user?id={})".format(a_user.first_name, a_user.id)
-            current_message = await event.reply(
-                current_saved_welcome_message.format(mention=mention),
-                file=cws.media_file_id
-            )
-            update_previous_welcome(event.chat_id, current_message.id)
+                )
+                a_user = await event.get_user()
+                current_saved_welcome_message = cws.custom_welcome_message
+                mention = "[{}](tg://user?id={})".format(a_user.first_name, a_user.id)
+                current_message = await event.reply(
+                    current_saved_welcome_message.format(mention=mention),
+                    file=cws.media_file_id
+                )
+                update_previous_welcome(event.chat_id, current_message.id)
 
 
 @register(pattern=r".savewelcome (.*)", outgoing=True)
