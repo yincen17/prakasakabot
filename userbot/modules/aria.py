@@ -4,6 +4,7 @@
 import aria2p
 import asyncio
 import os
+from userbot import CMD_HELP
 from userbot.events import register
 
 
@@ -168,3 +169,21 @@ async def show_all(saw):
             allow_cache=False,
 			reply_to=saw.message.id,
 			)
+
+
+CMD_HELP.update({
+    "aria": ".magnet <MagnetLink>\
+\nUsage: Magnet Download.\
+\n\n.tor <filepath>\
+\nUsage: Torrent file from file_path.\
+\n\n.show\
+\nUsage: Show Downloading Status\
+\n\n.ariaRM\
+\nUsage: Remove All Downloads.\
+\n\n.ariaResume\
+\nUsage: Resume All Downloads\
+\n\n.ariaP\
+\nUsage: Pause All Downloads.\
+\n\n.url <torrentLink>\
+\nUsage: Downloads From Url."
+})
