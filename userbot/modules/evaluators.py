@@ -7,12 +7,16 @@
 """ Userbot module for executing code and terminal commands from Telegram. """
 
 import asyncio
+import time
+import io
 from getpass import getuser
 from os import remove
 from sys import executable
-
+import subprocess
 from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID
+from telethon.errors import MessageEmptyError, MessageTooLongError, MessageNotModifiedError
 from userbot.events import register
+from userbot import MAX_MESSAGE_SIZE_LIMIT
 
 
 @register(outgoing=True, pattern="^.eval(?: |$)(.*)")
@@ -80,69 +84,41 @@ async def evaluate(query):
 async def run(run_q):
     """ For .exec command, which executes the dynamically created program """
     if not run_q.text[0].isalpha() and run_q.text[0] not in ("/", "#", "@", "!"):
-        code = run_q.pattern_match.group(1)
-
-        if run_q.is_channel and not run_q.is_group:
-            await run_q.edit("`Exec isn't permitted on channels!`")
+        if run_q.fwd_from:
             return
-
-        if not code:
-            await run_q.edit("``` At least a variable is required to \
-execute. Use .help exec for an example.```")
-            return
-
-        if code in ("userbot.session", "config.env"):
-            await run_q.edit("`That's a dangerous operation! Not Permitted!`")
-            return
-
-        if len(code.splitlines()) <= 5:
-            codepre = code
-        else:
-            clines = code.splitlines()
-            codepre = clines[0] + "\n" + clines[1] + "\n" + clines[2] + \
-                "\n" + clines[3] + "..."
-
-        command = "".join(f"\n {l}" for l in code.split("\n.strip()"))
-        process = await asyncio.create_subprocess_exec(
-            executable, '-c', command.strip(),
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+        DELAY_BETWEEN_EDITS = 0.3
+        PROCESS_RUN_TIME = 100
+        cmd = run_q.pattern_match.group(1)
+        reply_to_id = run_q.message.id
+        if run_q.reply_to_msg_id:
+            reply_to_id = run_q.reply_to_msg_id
+        start_time = time.time() + PROCESS_RUN_TIME
+        process = await asyncio.create_subprocess_shell(
+            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
+        OUTPUT = f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**Output:**\n"
         stdout, stderr = await process.communicate()
-        result = str(stdout.decode().strip()) \
-            + str(stderr.decode().strip())
-
-        if result:
-            if len(result) > 4096:
-                file = open("output.txt", "w+")
-                file.write(result)
-                file.close()
+        if len(stdout) > MAX_MESSAGE_SIZE_LIMIT:
+            with io.BytesIO(str.encode(stdout)) as out_file:
+                out_file.name = "exec.text"
                 await run_q.client.send_file(
                     run_q.chat_id,
-                    "output.txt",
-                    reply_to=run_q.id,
-                    caption="`Output too large, sending as file`",
+                    out_file,
+                    force_document=True,
+                    allow_cache=False,
+                    caption=OUTPUT,
+                    reply_to=reply_to_id
                 )
-                remove("output.txt")
-                return
-            await run_q.edit(
-                "**Query: **\n`"
-                f"{codepre}"
-                "`\n**Result: **\n`"
-                f"{result}"
-                "`"
-            )
-        else:
-            await run_q.edit(
-                "**Query: **\n`"
-                f"{codepre}"
-                "`\n**Result: **\n`No Result Returned/False`"
-            )
+                await run_q.delete()
+        if stderr.decode():
+            await run_q.edit(f"{OUTPUT}`{stderr.decode()}`")
+            return
+        await run_q.edit(f"{OUTPUT}`{stdout.decode()}`")
 
         if BOTLOG:
             await run_q.client.send_message(
                 BOTLOG_CHATID,
-                "Exec query " + codepre + " was executed successfully"
+                "Exec query " + OUTPUT + " was executed successfully"
             )
 
 
