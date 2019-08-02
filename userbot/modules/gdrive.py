@@ -117,18 +117,13 @@ async def download(dryb):
         if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
             os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
             required_file_name = None
-        if "|" in input_str:
+        if input_str:
             start = datetime.now()
-            url, file_name = input_str.split("|")
+            url, file_name = input_str
             url = url.strip()
             # https://stackoverflow.com/a/761825/4723940
             file_name = file_name.strip()
-            head, tail = os.path.split(file_name)
-            if head:
-                if not os.path.isdir(os.path.join(TEMP_DOWNLOAD_DIRECTORY, head)):
-                    os.makedirs(os.path.join(TEMP_DOWNLOAD_DIRECTORY, head))
-                    file_name = os.path.join(head, tail)
-            downloaded_file_name = TEMP_DOWNLOAD_DIRECTORY + "" + file_name
+            downloaded_file_name = await dryb.client.download_file_name(url, TEMP_DOWNLOAD_DIRECTORY + "" + file_name)
             downloader = SmartDL(url, downloaded_file_name, progress_bar=False)
             downloader.start(blocking=False)
             c_time = time.time()
