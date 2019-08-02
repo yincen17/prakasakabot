@@ -110,6 +110,8 @@ TELEGRAPH_SHORT_NAME = os.environ.get("TELEGRAPH_SHORT_NAME", "Paper")
 #Remove_BG
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
 
+MAX_MESSAGE_SIZE_LIMIT = 4095
+
   
 
 if STRING_SESSION:
