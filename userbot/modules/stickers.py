@@ -43,7 +43,7 @@ async def kang(args):
                         in message.media.document.attributes):
                     emoji = message.media.document.attributes[1].alt
                     emojibypass = True
-            elif (DocumentAttributeFilename(file_name='AnimatedSticker.tgs')
+            elif (DocumentAttributeFilename(file_name='AnimatedSticker.TGS')
                   in message.media.document.attributes):
                 emoji = message.media.document.attributes[0].alt
                 emojibypass = True
