@@ -2,27 +2,19 @@ try:
     from userbot.modules.sql_helper import SESSION, BASE
 except ImportError:
     raise AttributeError
-from sqlalchemy import BigInteger, Column, String, UnicodeText, Boolean
 
-
+from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
 
 class Welcome(BASE):
     __tablename__ = "welcome"
     chat_id = Column(String(14), primary_key=True)
-    custom_welcome_message = Column(UnicodeText)
+    custom_welcome_message = Column(UnicodeText, nullable=False)
     media_file_id = Column(UnicodeText)
     should_clean_welcome = Column(Boolean, default=False)
     previous_welcome = Column(BigInteger)
 
-    def __init__(
-        self,
-        chat_id,
-        custom_welcome_message,
-        should_clean_welcome,
-        previous_welcome,
-        media_file_id=None,
-    ):
-        self.chat_id = chat_id
+    def __init__(self, chat_id, custom_welcome_message, should_clean_welcome, previous_welcome, media_file_id=None):
+        self.chat_id = str(chat_id)
         self.custom_welcome_message = custom_welcome_message
         self.media_file_id = media_file_id
         self.should_clean_welcome = should_clean_welcome
@@ -41,30 +33,25 @@ def get_current_welcome_settings(chat_id):
         SESSION.close()
 
 
-def add_welcome_setting(
-    chat_id,
-    custom_welcome_message,
-    should_clean_welcome,
-    previous_welcome,
-    media_file_id=None
-):
-    # adder = SESSION.query(Welcome).get(chat_id)
-    adder = Welcome(
-        chat_id,
-        custom_welcome_message,
-        should_clean_welcome,
-        previous_welcome,
-        media_file_id
-    )
-    SESSION.add(adder)
-    SESSION.commit()
+def add_welcome_setting(chat_id, custom_welcome_message, should_clean_welcome, previous_welcome,media_file_id=None):
+    try:
+        adder = Welcome(chat_id, custom_welcome_message, should_clean_welcome, previous_welcome, media_file_id)
+        SESSION.add(adder)
+        SESSION.commit()
+        return True
+    except:
+        return False
 
 
 def rm_welcome_setting(chat_id):
-    rem = SESSION.query(Welcome).get(str(chat_id))
-    if rem:
-        SESSION.delete(rem)
-        SESSION.commit()
+    try:
+        rem = SESSION.query(Welcome).get(str(chat_id))
+        if rem:
+            SESSION.delete(rem)
+            SESSION.commit()
+            return True
+    except:
+        return False
 
 
 def update_previous_welcome(chat_id, previous_welcome):
