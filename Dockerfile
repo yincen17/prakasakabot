@@ -28,6 +28,7 @@ RUN apk add --no-cache --update \
     libxslt-dev \
     linux-headers \
     musl \
+    aria2c \
     neofetch \
     openssl-dev \
     php-pgsql \
