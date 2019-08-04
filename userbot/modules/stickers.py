@@ -16,7 +16,7 @@ from userbot import bot, CMD_HELP
 from userbot.events import register
 from telethon.tl.functions.messages import GetStickerSetRequest
 from telethon.tl.types import InputStickerSetID
-from telethon.tl.types import DocumentAttributeSticker
+from telethon.tl.types import DocumentAttributeSticker, DocumentAttributeImageSize
 
 
 @register(outgoing=True, pattern="^.kang")
