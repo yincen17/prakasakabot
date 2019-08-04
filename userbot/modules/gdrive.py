@@ -327,7 +327,8 @@ async def upload_file(http, file_path, file_name, mime_type, event):
     # Insert new permissions
     drive_service.permissions().insert(fileId=response.get('id'), body=permissions)
     # Define file instance and get url for download
-    download_url = "https://drive.google.com/file/d/" + response.get('id') + "/view"
+    file = drive_service.files().get(fileId=response["id"])
+    download_url = file.get("webContentLink")
     return download_url
 
 @register(pattern="^.gfolder$", outgoing=True)
