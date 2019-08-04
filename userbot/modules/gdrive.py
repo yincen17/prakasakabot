@@ -325,9 +325,9 @@ async def upload_file(http, file_path, file_name, mime_type, event):
     if file:
         await event.edit(file_name + " uploaded successfully")
     # Insert new permissions
-    drive_service.permissions().insert(fileId=response.get('id'), body=permissions)
+    drive_service.permissions().insert(fileId=response.get["id"], body=permissions)
     # Define file instance and get url for download
-    file = drive_service.files().get(fileId=response["id"])
+    file = drive_service.files().get(fileId=response.get["id"])
     download_url = file.get("webContentLink")
     return download_url
 
