@@ -331,7 +331,6 @@ async def upload_file(http, file_path, file_name, mime_type, event):
     download_url = response.get("webContentLink")
     return download_url
 
-if downloader.isSuccessful():
     file_path=TEMP_DOWNLOAD_DIRECTORY
     try:
         with open(file_path) as f: pass
