@@ -332,25 +332,6 @@ async def upload_file(http, file_path, file_name, mime_type, event):
     return download_url
 
 
-if __name__ == '__main__':
-    file_path=TEMP_DOWNLOAD_DIRECTORY
-    try:
-        with open(file_path) as f: pass
-    except IOError as e:
-        print(e)
-        sys.exit(1)
-# Check if token file exists, if not create it by requesting authorization code
-    try:
-        with open(token_file) as f: pass
-    except IOError:
-        http = authorize(token_file, create_token_file(token_file))
-# Authorize, get file parameters, upload file and print out result URL for download
-    http = authorize(token_file, None)
-    file_name, mime_type = file_ops(file_path)
-# Sometimes API fails to retrieve starting URI, we wrap it.
-    try:
-        await event.edit("Here is your Google Drive link: "+upload_file(file_path, file_name, mime_type))
-
 @register(pattern="^.gfolder$", outgoing=True)
 async def _(event):
     if event.fwd_from:
