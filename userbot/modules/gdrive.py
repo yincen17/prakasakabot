@@ -323,13 +323,38 @@ async def upload_file(http, file_path, file_name, mime_type, event):
                 round(percentage, 2))
             await event.edit(f"Uploading to Google Drive...\n\nFile Name: {file_name}\n{progress_str}")
     if file:
-        await event.edit(file_name + " uploaded successfully")
+        await event.edit(file_name + " Uploaded Successfully")
     # Insert new permissions
     drive_service.permissions().insert(fileId=response.get('id'), body=permissions).execute()
     # Define file instance and get url for download
     file = drive_service.files().get(fileId=response.get('id')).execute()
     download_url = response.get("webContentLink")
     return download_url
+
+if downloader.isSuccessful():
+    file_path=TEMP_DOWNLOAD_DIRECTORY
+    try:
+        with open(file_path) as f: pass
+    except IOError as e:
+        print(e)
+        sys.exit(1)
+# Check if token file exists, if not create it by requesting authorization code
+    try:
+        with open(token_file) as f: pass
+    except IOError:
+        http = authorize(token_file, create_token_file(token_file))
+# Authorize, get file parameters, upload file and print out result URL for download
+    http = authorize(token_file, None)
+    file_name, mime_type = file_ops(file_path)
+# Sometimes API fails to retrieve starting URI, we wrap it.
+    try:
+        print("Here is your Google Drive link: "+upload_file(file_path, file_name, mime_type))
+    except ResumableUploadError as e:
+        print("Error occured while first upload try:", e)
+        print("Trying one more time.")
+        print("Here is your Google Drive link: "+upload_file(file_path, file_name, mime_type))
+    finally:
+        TEMP_DOWNLOAD_DIRECTORY.local_delete(file_path)
 
 @register(pattern="^.gfolder$", outgoing=True)
 async def _(event):
