@@ -25,12 +25,12 @@ from userbot import MAX_MESSAGE_SIZE_LIMIT
 async def evaluate(query):
     """ For .eval command, evaluates the given Python expression. """
     if not query.text[0].isalpha() and query.text[0] not in ("/", "#", "@", "!"):
-        if queri.fwd_from:
+        if query.fwd_from:
             return
-        await queri.edit("Processing ...")
-        cmd = queri.pattern_match.group(1)
-        reply_to_id = queri.message.id
-        if queri.reply_to_msg_id:
+        await query.edit("Processing ...")
+        cmd = query.pattern_match.group(1)
+        reply_to_id = query.message.id
+        if query.reply_to_msg_id:
             reply_to_id = query.reply_to_msg_id
         evaluation = eval(cmd)
         await query.delete()
