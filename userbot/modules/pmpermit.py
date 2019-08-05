@@ -48,7 +48,7 @@ async def permitpm(event):
                     # Send the Unapproved Message again
                     if event.text != prevmsg:
                         async for message in event.client.iter_messages(event.chat_id, from_user='me', search=UNAPPROVED_MSG):
-                            await event.delete()
+                            await message.delete()
                         await event.reply(UNAPPROVED_MSG)
                     LASTMSG.update({event.chat_id: event.text})
                 else:
@@ -179,7 +179,7 @@ async def approvepm(apprvpm):
         )
         
         async for message in apprvpm.client.iter_messages(apprvpm.chat_id, from_user='me', search=UNAPPROVED_MSG):
-            await apprvm.delete()
+            await message.delete()
 
         if BOTLOG:
             await apprvpm.client.send_message(
