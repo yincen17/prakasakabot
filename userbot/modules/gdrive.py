@@ -196,6 +196,8 @@ async def download(dryb):
                 duration = (end - start).seconds
                 required_file_name = input_str
                 await dryb.edit("Found `{}` in {} seconds, uploading to Google Drive !!".format(input_str, duration))
+            else:	
+                await dryb.edit("File not found in local server. Give me a valid file path !!")	
                 return False
     if required_file_name:
         #
