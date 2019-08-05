@@ -12,7 +12,7 @@ google-auth-oauthlib
 googletrans>=2.4.0
 google_auth_oauthlib
 google_images_download>=2.7.1
-google>=2.0.2
+gsearch>=1.6.0
 gTTS>=2.0.1
 gTTS-token>=1.1.3
 hachoir
