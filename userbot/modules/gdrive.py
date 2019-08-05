@@ -312,7 +312,7 @@ async def upload_file(http, file_path, file_name, mime_type, event):
     }
     # Insert a file
     file = drive_service.files().insert(body=body, media_body=media_body).execute()
-    response = None
+    response, status = None
     while response is None:
         if status:
             percentage = int(status.progress() * 100)
