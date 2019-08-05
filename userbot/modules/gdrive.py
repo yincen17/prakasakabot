@@ -147,7 +147,7 @@ async def download(dryb):
                     round(percentage, 2))
                 estimated_total_time = downloader.get_eta(human=True)
                 try:
-                    current_message = f"Downloading...\nURL: {url}\nFile Name: {file_name}\n{progress_str}\n{humanbytes(total_length)} of {humanbytes(downloaded)}\nETA: {estimated_total_time}"
+                    current_message = f"Downloading...\nURL: {url}\nFile Name: {file_name}\n{progress_str}\n{humanbytes(downloaded)} of {humanbytes(total_length)}\nETA: {estimated_total_time}"
                     if current_message != display_message:
                         await dryb.edit(current_message)
                         display_message = current_message
@@ -158,9 +158,10 @@ async def download(dryb):
             duration = (end - start).seconds
             if downloader.isSuccessful():
                 await dryb.edit(
-                    "Downloaded to `{}` in {} seconds.".format(
+                    "Downloaded to `{}` in {} seconds\nNow Uploading to Google Drive...".format(
                         downloaded_file_name, duration)
                 )
+                required_file_name = downloaded_file_name
             else:
                 await dryb.edit(
                     "Incorrect URL\n{}".format(url)
