@@ -314,7 +314,7 @@ async def upload_file(http, file_path, file_name, mime_type, event):
     file = drive_service.files().insert(body=body, media_body=media_body).execute()
     response = None
     while response is None:
-        status, response = file.execute()
+        status, response = file.drive_service.files()
         if status:
             percentage = int(status.progress() * 100)
             progress_str = "[{0}{1}]\nProgress: {2}%\n".format(
