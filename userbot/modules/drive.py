@@ -189,10 +189,12 @@ async def download(dryb):
                 await dryb.edit(
                         "Downloaded to `{}` in {} seconds\nNow Uploading to Google Drive...".format(
                             downloaded_file_name, duration)
+                )
             else:
                 await dryb.edit(
                         "Incorrect URL\n{}".format(url)
                 )
+                return False
     if required_file_name:
         #
         if G_DRIVE_AUTH_TOKEN_DATA is not None:
