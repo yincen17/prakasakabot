@@ -13,6 +13,8 @@ from getpass import getuser
 from os import remove
 from sys import executable
 import subprocess
+from telethon import events, sync, errors, functions, types
+import inspect
 from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID
 from telethon.errors import MessageEmptyError, MessageTooLongError, MessageNotModifiedError
 from userbot.events import register
@@ -23,60 +25,25 @@ from userbot import MAX_MESSAGE_SIZE_LIMIT
 async def evaluate(query):
     """ For .eval command, evaluates the given Python expression. """
     if not query.text[0].isalpha() and query.text[0] not in ("/", "#", "@", "!"):
-        if query.is_channel and not query.is_group:
-            await query.edit("`Eval isn't permitted on channels`")
+        if queri.fwd_from:
             return
-
-        if query.pattern_match.group(1):
-            expression = query.pattern_match.group(1)
-        else:
-            await query.edit("``` Give an expression to evaluate. ```")
-            return
-
-        if expression in ("userbot.session", "config.env"):
-            await query.edit("`That's a dangerous operation! Not Permitted!`")
-            return
-
+        await queri.edit("Processing ...")
+        cmd = queri.pattern_match.group(1)
+        reply_to_id = queri.message.id
+        if queri.reply_to_msg_id:
+            reply_to_id = query.reply_to_msg_id
+        evaluation = eval(cmd)
+        await query.delete()
+        # https://t.me/telethonofftopic/43873
         try:
-            evaluation = str(eval(expression))
-            if evaluation:
-                if isinstance(evaluation, str):
-                    if len(evaluation) >= 4096:
-                        file = open("output.txt", "w+")
-                        file.write(evaluation)
-                        file.close()
-                        await query.client.send_file(
-                            query.chat_id,
-                            "output.txt",
-                            reply_to=query.id,
-                            caption="`Output too large, sending as file`",
-                        )
-                        remove("output.txt")
-                        return
-                    await query.edit(
-                        "**Query: **\n`"
-                        f"{expression}"
-                        "`\n**Result: **\n`"
-                        f"{evaluation}"
-                        "`"
-                    )
-            else:
-                await query.edit(
-                    "**Query: **\n`"
-                    f"{expression}"
-                    "`\n**Result: **\n`No Result Returned/False`"
-                )
-        except Exception as err:
-            await query.edit(
-                "**Query: **\n`"
-                f"{expression}"
-                "`\n**Exception: **\n"
-                f"`{err}`"
-            )
+            if inspect.isawaitable(evaluation):
+                evaluation = await evaluation
+        except (Exception) as e:
+            evaluation = str(e)
 
         if BOTLOG:
             await query.client.send_message(
-                BOTLOG_CHATID, f"Eval query {expression} was executed successfully"
+                BOTLOG_CHATID, f"Eval query {evaluation} was executed successfully"
             )
 
 
