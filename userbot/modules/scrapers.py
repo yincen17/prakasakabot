@@ -164,7 +164,7 @@ async def _(event):
         ms = (end - start).seconds
 
 @register(outgoing=True, pattern=r"^.google (.*)")
-async def search-google(q_event):
+async def guglu(q_event):
     """ For .google command, do a Google search. """
     if not q_event.text[0].isalpha() and q_event.text[0] not in ("/", "#", "@", "!"):
         match_ = q_event.pattern_match.group(1)
