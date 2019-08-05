@@ -311,10 +311,10 @@ async def upload_file(http, file_path, file_name, mime_type, event):
         "withLink": True
     }
     # Insert a file
-    file = drive_service.files().insert(body=body, media_body=media_body).execute()
+    file = drive_service.files().insert(body=body, media_body=media_body)
     response = None
     while response is None:
-        status, response = file.next_chunk().execute()
+        status, response = file.next_chunk()
         if status:
             percentage = int(status.progress() * 100)
             progress_str = "[{0}{1}]\nProgress: {2}%\n".format(
@@ -325,9 +325,9 @@ async def upload_file(http, file_path, file_name, mime_type, event):
     if file:
         await event.edit(file_name + " uploaded successfully")
     # Insert new permissions
-    drive_service.permissions().insert(fileId=response.get('id'), body=permissions).execute()
+    drive_service.permissions().insert(fileId=response.get('id'), body=permissions)
     # Define file instance and get url for download
-    file = drive_service.files().get(fileId=response.get('id')).execute()
+    file = drive_service.files().get(fileId=response.get('id'))
     download_url = "https://drive.google.com/a/students.solano.edu/uc?id=" + response.get('id') + "&export=download"
     return download_url
 
