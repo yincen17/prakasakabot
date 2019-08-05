@@ -117,9 +117,9 @@ async def download(dryb):
         if CLIENT_ID is None or CLIENT_SECRET is None:
             return false
         if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
+            os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
         if dryb.reply_to_msg_id:
-        start = datetime.now()
+            start = datetime.now()
         reply_message = await dryb.get_reply_message()
         try:
             c_time = time.time()
