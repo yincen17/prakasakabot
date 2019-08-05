@@ -290,9 +290,9 @@ def authorize(token_file, storage):
     return http
 
 
-async def upload_file(http, file_path, file_name, mime_type):
+async def upload_file(http, file_path, file_name, mime_type, event):
     # Create Google Drive service instance
-    drive_service = build("drive", "v2", http=http)
+    drive_service = build("drive", "v2", http=http, cache_discovery=False)
     # File body description
     media_body = MediaFileUpload(file_path, mimetype=mime_type, resumable=True)
     body = {
@@ -311,10 +311,10 @@ async def upload_file(http, file_path, file_name, mime_type):
         "withLink": True
     }
     # Insert a file
-    file = drive_service.files().insert(body=body, media_body=media_body).execute()
+    file = drive_service.files().insert(body=body, media_body=media_body)
     response = None
     while response is None:
-        response = file
+        status, response = file.next_chunk()
         if status:
             percentage = int(status.progress() * 100)
             progress_str = "[{0}{1}]\nProgress: {2}%\n".format(
@@ -325,18 +325,17 @@ async def upload_file(http, file_path, file_name, mime_type):
     if file:
         await event.edit(file_name + " uploaded successfully")
     # Insert new permissions
-    drive_service.permissions().insert(fileId=response.get["id"], body=permissions).execute()
+    drive_service.permissions().insert(fileId=response.get('id'), body=permissions)
     # Define file instance and get url for download
-    file = drive_service.files().get(fileId=response.get["id"]).execute()
-    download_url = response.get("webContentLink")
+    download_url = "https://drive.google.com/a/students.solano.edu/uc?id=" + response.get('id') + "&export=download"
     return download_url
 
 @register(pattern="^.gfolder$", outgoing=True)
 async def _(event):
     if event.fwd_from:
         return
-    folder_link = "https://drive.google.com/drive/u/2/folders/"+parent_id
-    await event.edit("Your current Google Drive upload directory: \n"+folder_link)
+    folder_link =f"https://drive.google.com/drive/u/2/folders/"+parent_id
+    await event.edit(f"Your current Google Drive upload directory : [Here]({folder_link})")
 
 
 CMD_HELP.update({
