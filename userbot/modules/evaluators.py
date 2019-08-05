@@ -27,7 +27,6 @@ async def evaluate(query):
     if not query.text[0].isalpha() and query.text[0] not in ("/", "#", "@", "!"):
         if query.fwd_from:
             return
-        await query.edit("Processing ...")
         cmd = query.pattern_match.group(1)
         reply_to_id = query.message.id
         if query.reply_to_msg_id:
