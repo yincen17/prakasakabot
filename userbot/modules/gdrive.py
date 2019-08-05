@@ -192,7 +192,6 @@ async def download(dryb):
         elif input_str:
             input_str = input_str.strip()
             if os.path.exists(input_str):
-                start = datetime.now()
                 end = datetime.now()
                 duration = (end - start).seconds
                 required_file_name = input_str
