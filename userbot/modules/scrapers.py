@@ -164,13 +164,13 @@ async def _(event):
         ms = (end - start).seconds
 
 @register(outgoing=True, pattern=r"^.google (.*)")
-async def guglu(q_event):
+async def google(q_event):
     """ For .google command, do a Google search. """
     if not q_event.text[0].isalpha() and q_event.text[0] not in ("/", "#", "@", "!"):
         match_ = q_event.pattern_match.group(1)
         match = quote_plus(match_)
         result_ = await asyncsh(
-            f"search-google {match}",
+            f"google {match}",
             stdout=asyncsh_PIPE,
             stderr=asyncsh_PIPE
         )
