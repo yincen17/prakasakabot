@@ -11,7 +11,6 @@ import os
 import time
 from pySmartDL import SmartDL
 from telethon import events
-from telethon.tl.types import DocumentAttributeVideo
 from datetime import datetime
 from apiclient.discovery import build
 from apiclient.http import MediaFileUpload
