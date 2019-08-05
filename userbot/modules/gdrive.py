@@ -159,7 +159,7 @@ async def download(dryb):
             duration = (end - start).seconds
             if downloader.isSuccessful():
                 await dryb.edit(
-                    "Downloaded to `{}` in {} seconds\nNow Uploading to Google Drive...".format(
+                    "Downloaded to `{}` in {} seconds.\nNow uploading to GDrive...".format(
                         downloaded_file_name, duration)
                 )
                 required_file_name = downloaded_file_name
@@ -167,6 +167,17 @@ async def download(dryb):
                 await dryb.edit(
                     "Incorrect URL\n{}".format(url)
                 )
+        elif input_str:
+            input_str = input_str.strip()
+            if os.path.exists(input_str):
+                start = datetime.now()
+                end = datetime.now()
+                duration = (end - start).seconds
+                required_file_name = input_str
+                await dryb.edit("Found `{}` in {} seconds, uploading to Google Drive !!".format(input_str, duration))
+            else:
+                await dryb.edit("File not found in local server. Give me a valid file path !!")
+                return False
         elif dryb.reply_to_msg_id:
             start = datetime.now()
             try:
@@ -180,25 +191,14 @@ async def download(dryb):
                 )
             except Exception as e: # pylint:disable=C0103,W0703
                 await dryb.edit(str(e))
-                return False
             else:
                 end = datetime.now()
-                duration = (end - start).seconds
                 required_file_name = downloaded_file_name
+                duration = (end - start).seconds
                 await dryb.edit(
                     "Downloaded to `{}` in {} seconds.\nNow uploading to GDrive...".format(
                         downloaded_file_name, duration)
                 )
-        elif input_str:
-            input_str = input_str.strip()
-            if os.path.exists(input_str):
-                end = datetime.now()
-                duration = (end - start).seconds
-                required_file_name = input_str
-                await dryb.edit("Found `{}` in {} seconds, uploading to Google Drive !!".format(input_str, duration))
-            else:	
-                await dryb.edit("File not found in local server. Give me a valid file path !!")	
-                return False
     if required_file_name:
         #
         if G_DRIVE_AUTH_TOKEN_DATA is not None:
