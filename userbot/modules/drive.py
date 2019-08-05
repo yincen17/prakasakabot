@@ -151,13 +151,13 @@ async def download(dryb):
                 await dryb.edit("File not found in local server. Give me a valid file path !!")
     if "|" in input_str:
             url, file_name = input_str.split("|")
-        url = url.strip()
-        file_name = file_name.strip()
-        downloaded_file_name = os.path.join(to_download_directory, file_name)
-        downloader = SmartDL(url, downloaded_file_name, progress_bar=False)
-        downloader.start(blocking=False)
-        c_time = time.time()
-        while not downloader.isFinished():
+            url = url.strip()
+            file_name = file_name.strip()
+            downloaded_file_name = os.path.join(to_download_directory, file_name)
+            downloader = SmartDL(url, downloaded_file_name, progress_bar=False)
+            downloader.start(blocking=False)
+            c_time = time.time()
+            while not downloader.isFinished():
             # url
             # downloaded_file_name
             # mone
