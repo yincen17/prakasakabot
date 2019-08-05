@@ -166,7 +166,8 @@ async def _(event):
 @register(outgoing=True, pattern=r"^.google (.*)")
 async def gsearch(q_event):
     """ For .google command, do a Google search. """
-    if not q_event.text[0].isalpha() and q_event.text[0] not in ("/", "#", "@", "!"):
+    if not q_event.text[0].isalpha() and q_event.text[0] not in (
+            "/", "#", "@", "!"):
         match_ = q_event.pattern_match.group(1)
         match = quote_plus(match_)
         result_ = await asyncsh(
