@@ -183,6 +183,7 @@ async def download(dryb):
                 except Exception as e:
                     LOGS.info(str(e))
             end = datetime.now()
+            required_file_name = downloaded_file_name
             duration = (end - start).seconds
             if downloader.isSuccessful():
                 await dryb.edit(
