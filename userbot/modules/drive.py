@@ -158,42 +158,42 @@ async def download(dryb):
             downloader.start(blocking=False)
             c_time = time.time()
             while not downloader.isFinished():
-            # url
-            # downloaded_file_name
-            # mone
-            # c_time
-            total_length = downloader.filesize if downloader.filesize else None
-            downloaded = downloader.get_dl_size()
-            display_message = ""
-            now = time.time()
-            diff = now - c_time
-            percentage = downloader.get_progress() * 100
-            speed = downloader.get_speed()
-            elapsed_time = round(diff) * 1000
-            progress_str = "[{0}{1}]\nProgress: {2}%".format(
-                ''.join(["█" for i in range(math.floor(percentage / 5))]),
-                ''.join(["░" for i in range(20 - math.floor(percentage / 5))]),
-                round(percentage, 2))
-            estimated_total_time = downloader.get_eta(human=True)
-            try:
-                current_message = f"Downloading...\n\nURL: {url}\nFile Name: {file_name}\n{progress_str}\n{humanbytes(downloaded)} of {humanbytes(total_length)}\nETA: {estimated_total_time}"
-                if current_message != display_message:
-                    await dryb.edit(current_message)
-                    display_message = current_message
-            except Exception as e:
-                LOGS.info(str(e))
-        end = datetime.now()
-        duration = (end - start).seconds
-        if downloader.isSuccessful():
-            await dryb.edit(
-                    "Downloaded to `{}` in {} seconds\nNow Uploading to Google Drive...".format(
-                        downloaded_file_name, duration)
-                )
-                required_file_name = downloaded_file_name
-            else:
+                # url
+                # downloaded_file_name
+                # dryb
+                # c_time
+                total_length = downloader.filesize if downloader.filesize else None
+                downloaded = downloader.get_dl_size()
+                display_message = ""
+                now = time.time()
+                diff = now - c_time
+                percentage = downloader.get_progress() * 100
+                speed = downloader.get_speed()
+                elapsed_time = round(diff) * 1000
+                progress_str = "[{0}{1}]\nProgress: {2}%".format(
+                    ''.join(["█" for i in range(math.floor(percentage / 5))]),
+                    ''.join(["░" for i in range(20 - math.floor(percentage / 5))]),
+                    round(percentage, 2))
+                estimated_total_time = downloader.get_eta(human=True)
+                try:
+                    current_message = f"Downloading...\n\nURL: {url}\nFile Name: {file_name}\n{progress_str}\n{humanbytes(downloaded)} of {humanbytes(total_length)}\nETA: {estimated_total_time}"
+                    if current_message != display_message:
+                        await dryb.edit(current_message)
+                        display_message = current_message
+                except Exception as e:
+                    LOGS.info(str(e))
+            end = datetime.now()
+            duration = (end - start).seconds
+            if downloader.isSuccessful():
                 await dryb.edit(
-                    "Incorrect URL\n{}".format(url)
-                )
+                        "Downloaded to `{}` in {} seconds\nNow Uploading to Google Drive...".format(
+                            downloaded_file_name, duration)
+                    )
+                    required_file_name = downloaded_file_name
+                else:
+                    await dryb.edit(
+                        "Incorrect URL\n{}".format(url)
+                    )
     if required_file_name:
         #
         if G_DRIVE_AUTH_TOKEN_DATA is not None:
