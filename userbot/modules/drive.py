@@ -111,14 +111,14 @@ async def download(dryb):
     """ For .gdrive command, upload files to google drive. """
     if not dryb.text[0].isalpha() and dryb.text[0] not in ("/", "#", "@", "!"):
         if dryb.fwd_from:
-        return
-    await dryb.reply("Processing ...")
-    input_str = dryb.pattern_match.group(1)
-    if CLIENT_ID is None or CLIENT_SECRET is None:
+            return
+        await dryb.reply("Processing ...")
+        input_str = dryb.pattern_match.group(1)
+        if CLIENT_ID is None or CLIENT_SECRET is None:
             return false
-    if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
+        if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
         os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
-    if dryb.reply_to_msg_id:
+        if dryb.reply_to_msg_id:
         start = datetime.now()
         reply_message = await dryb.get_reply_message()
         try:
