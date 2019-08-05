@@ -349,13 +349,7 @@ if __name__ == '__main__':
     file_name, mime_type = file_ops(file_path)
 # Sometimes API fails to retrieve starting URI, we wrap it.
     try:
-        print("Here is your Google Drive link: "+upload_file(file_path, file_name, mime_type))
-    except ResumableUploadError as e:
-        print("Error occured while first upload try:", e)
-        print("Trying one more time.")
-        print("Here is your Google Drive link: "+upload_file(file_path, file_name, mime_type))
-    finally:
-        TEMP_DOWNLOAD_DIRECTORY.local_delete(file_path)
+        await event.edit("Here is your Google Drive link: "+upload_file(file_path, file_name, mime_type))
 
 @register(pattern="^.gfolder$", outgoing=True)
 async def _(event):
