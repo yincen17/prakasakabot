@@ -10,7 +10,7 @@ from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 
-from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID
+from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID, bot
 from userbot.events import register
 
 
@@ -46,13 +46,55 @@ async def chatidgetter(chat):
         await chat.edit("Chat ID: `" + str(chat.chat_id) + "`")
 
 
+@register(outgoing=True, pattern="^.mention (.*)")
+async def mention(event):
+    """ For .chatid, returns the ID of the chat you are in at that moment. """
+    if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
+        if event.fwd_from:
+            return
+        input_str = event.pattern_match.group(1)
+        if event.reply_to_msg_id:
+            previous_message = await event.get_reply_message()
+            if previous_message.forward:
+                replied_user = previous_message.forward.from_id
+            else:
+                replied_user = previous_message.from_id
+        else:
+            return
+        user_id = replied_user
+        caption = """<a href='tg://user?id={}'>{}</a>""".format(
+            user_id, input_str)
+        await event.edit(caption, parse_mode="HTML")
+
+
+@register(outgoing=True, pattern=r"^.log(?: |$)([\s\S]*)")
+async def log(log_text):
+    """ For .log command, forwards a message or the command argument to the bot logs group """
+    if not log_text.text[0].isalpha() and log_text.text[0] not in ("/", "#", "@", "!"):
+        if BOTLOG:
+            if log_text.reply_to_msg_id:
+                reply_msg = await log_text.get_reply_message()
+                await reply_msg.forward_to(BOTLOG_CHATID)
+            elif log_text.pattern_match.group(1):
+                user = f"#LOG / Chat ID: {log_text.chat_id}\n\n"
+                textx = user + log_text.pattern_match.group(1)
+                await bot.send_message(BOTLOG_CHATID, textx)
+            else:
+                await log_text.edit("`What am I supposed to log?`")
+                return
+            await log_text.edit("`Logged Successfully`")
+        else:
+            await log_text.edit("`This feature requires Logging to be enabled!`")
+        sleep(2)
+        await log_text.delete()
+
 
 @register(outgoing=True, pattern="^.kickme$")
 async def kickme(leave):
     """ Basically it's .kickme command """
     if not leave.text[0].isalpha() and leave.text[0] not in ("/", "#", "@", "!"):
         await leave.edit("`Nope, no, no, I go away`")
-        await leave.client(LeaveChannelRequest(leave.chat_id))
+        await bot(LeaveChannelRequest(leave.chat_id))
 
 
 @register(outgoing=True, pattern="^.unmutechat$")
@@ -99,54 +141,6 @@ async def keep_read(message):
             if i.groupid == str(message.chat_id):
                 await message.client.send_read_acknowledge(message.chat_id)
 
-
-@register(outgoing=True, pattern="^.mention (.*)")
-async def mention(event):
-    """ For .chatid, returns the ID of the chat you are in at that moment. """
-    if event.fwd_from:
-        return
-    input_str = event.pattern_match.group(1)
-
-    if event.reply_to_msg_id:
-        previous_message = await event.get_reply_message()
-    if previous_message.forward:
-        replied_user = await event.client(GetFullUserRequest(previous_message.forward.from_id))
-    else:
-        user = event.pattern_match.group(1)
-
-    if user.isnumeric():
-            user = int(user)
-
-    if not user:
-            self_user = await event.client.get_me()
-            user = self_user.id
-
-    if event.message.entities is not None:
-            mention_entity = event.message.entities
-            probable_user_mention_entity = mention_entity[0]
-
-            if isinstance(probable_user_mention_entity, MessageEntityMentionName, GetFullUserRequest):
-                user_id = probable_user_mention_entity.user_id
-                replied_user = await event.client(GetFullUserRequest(user_id))
-    else:
-        try:
-            user_object = await event.client.get_entity(user)
-            replied_user = await event.client(GetFullUserRequest(user_object.id))
-        except Exception as e:
-            await event.edit(str(e))
-            return None
-    
-    user_id = replied_user.user.id
-    caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, user)
-    await event.client.send_message(
-        event.chat_id,
-        caption,
-        parse_mode="HTML",        
-        force_document=False,
-        silent=True
-        )
-    await event.delete()
-
 CMD_HELP.update({
     "chat": ".chatid\
 \nUsage: Fetches the current chat's ID\
@@ -161,5 +155,5 @@ CMD_HELP.update({
 \n\n.mutechat\
 \nUsage: Allows you to mute any chat.\
 \n\n.mention <text>\
-\nUsage: Reply or Direct msg to generate the user's permanent link with custom text."
+\nUsage: Reply to generate the user's permanent link with custom text."
 })
