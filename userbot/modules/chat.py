@@ -132,7 +132,7 @@ async def mention(event):
             return None
     
     user_id = replied_user.user.id
-    caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, input_str)
+    caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, user)
     await event.client.send_message(
         event.chat_id,
         caption,
