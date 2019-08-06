@@ -10,7 +10,7 @@ from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 
-from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID, bot
+from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 
@@ -52,7 +52,7 @@ async def kickme(leave):
     """ Basically it's .kickme command """
     if not leave.text[0].isalpha() and leave.text[0] not in ("/", "#", "@", "!"):
         await leave.edit("`Nope, no, no, I go away`")
-        await bot(LeaveChannelRequest(leave.chat_id))
+        await leave.client(LeaveChannelRequest(leave.chat_id))
 
 
 @register(outgoing=True, pattern="^.unmutechat$")
@@ -108,32 +108,40 @@ async def mention(event):
             return
     input_str = event.pattern_match.group(1)
 
+    if user.isnumeric():
+            user = int(user)
+
+        if not user:
+            self_user = await event.client.get_me()
+            user = self_user.id
+
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         if previous_message.forward:
-            replied_user = await bot(GetFullUserRequest(previous_message.forward.from_id))
+            replied_user = await event.client(GetFullUserRequest(previous_message.forward.from_id))
         else:
-            replied_user = await bot(GetFullUserRequest(previous_message.from_id))
+            replied_user = await event.client(GetFullUserRequest(previous_message.from_id))
     else:
         input_str = event.pattern_match.group(1)
         if event.message.entities is not None:
             mention_entity = event.message.entities
             probable_user_mention_entity = mention_entity[0]
-            if type(probable_user_mention_entity) == MessageEntityMentionName:
+
+            if isinstance(probable_user_mention_entity, MessageEntityMentionName):
                 user_id = probable_user_mention_entity.user_id
-                replied_user = await bot(GetFullUserRequest(user_id))
+                replied_user = await event.client(GetFullUserRequest(user_id))
         else:
             try:
-                user_object = await bot.get_entity(input_str)
+                user_object = await event.client.get_entity(input_str)
                 user_id = user_object.id
-                replied_user = await bot(GetFullUserRequest(user_id))
+                replied_user = await event.client(GetFullUserRequest(user_id))
             except Exception as e:
                 await event.edit(str(e))
                 return None
     
     user_id = replied_user.user.id
     caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, input_str)
-    await bot.send_message(
+    await event.client.send_message(
         event.chat_id,
         caption,
         parse_mode="HTML",        
