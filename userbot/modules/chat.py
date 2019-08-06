@@ -105,6 +105,7 @@ async def mention(event):
     """ For .chatid, returns the ID of the chat you are in at that moment. """
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
+    if previous_message.forward:
         replied_user = await event.client(GetFullUserRequest(previous_message.forward.from_id))
     else:
         user = event.pattern_match.group(1)
