@@ -125,9 +125,8 @@ async def mention(event):
                 replied_user = await event.client(GetFullUserRequest(user_id))
     else:
         try:
-            user_object = await event.client.get_entity(input_str)
-            user_id = user_object.id
-            replied_user = await event.client(GetFullUserRequest(user_id))
+            user_object = await event.client.get_entity(user)
+            replied_user = await event.client(GetFullUserRequest(user_object.id))
         except Exception as e:
             await event.edit(str(e))
             return None
