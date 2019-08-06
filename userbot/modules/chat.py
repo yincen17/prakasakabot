@@ -120,7 +120,7 @@ async def mention(event):
             mention_entity = event.message.entities
             probable_user_mention_entity = mention_entity[0]
 
-            if isinstance(probable_user_mention_entity, MessageEntityMentionName):
+            if isinstance(probable_user_mention_entity, MessageEntityMentionName, GetFullUserRequest):
                 user_id = probable_user_mention_entity.user_id
                 replied_user = await event.client(GetFullUserRequest(user_id))
     else:
