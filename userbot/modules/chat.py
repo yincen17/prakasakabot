@@ -111,7 +111,7 @@ async def mention(event):
     if user.isnumeric():
             user = int(user)
 
-        if not user:
+    if not user:
             self_user = await event.client.get_me()
             user = self_user.id
 
