@@ -116,7 +116,7 @@ async def mention(event):
             self_user = await event.client.get_me()
             user = self_user.id
 
-        if event.message.entities is not None:
+    if event.message.entities is not None:
             mention_entity = event.message.entities
             probable_user_mention_entity = mention_entity[0]
 
