@@ -123,14 +123,14 @@ async def mention(event):
             if isinstance(probable_user_mention_entity, MessageEntityMentionName):
                 user_id = probable_user_mention_entity.user_id
                 replied_user = await event.client(GetFullUserRequest(user_id))
-        else:
-            try:
-                user_object = await event.client.get_entity(input_str)
-                user_id = user_object.id
-                replied_user = await event.client(GetFullUserRequest(user_id))
-            except Exception as e:
-                await event.edit(str(e))
-                return None
+    else:
+        try:
+            user_object = await event.client.get_entity(input_str)
+            user_id = user_object.id
+            replied_user = await event.client(GetFullUserRequest(user_id))
+        except Exception as e:
+            await event.edit(str(e))
+            return None
     
     user_id = replied_user.user.id
     caption = """<a href='tg://user?id={}'>{}</a>""".format(user_id, input_str)
