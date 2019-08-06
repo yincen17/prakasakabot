@@ -104,8 +104,8 @@ async def keep_read(message):
 async def mention(event):
     """ For .chatid, returns the ID of the chat you are in at that moment. """
     if event.fwd_from:
-	return
-        input_str = event.pattern_match.group(1)
+        return
+    input_str = event.pattern_match.group(1)
 
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
