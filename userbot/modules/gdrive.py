@@ -5,7 +5,6 @@
 # Licensed under MIT License
 
 import asyncio
-import aiohttp
 import math
 import os
 import time
