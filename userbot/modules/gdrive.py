@@ -47,8 +47,8 @@ async def progress(current, total, event, start, type_of_ps, file_name = None):
         time_to_completion = round((total - current) / speed) * 1000
         estimated_total_time = elapsed_time + time_to_completion
         progress_str = "[{0}{1}]\nProgress: {2}%\n".format(
-            ''.join(["█" for i in range(math.floor(percentage / 5))]),
-            ''.join(["░" for i in range(20 - math.floor(percentage / 5))]),
+            ''.join(["⬤" for i in range(math.floor(percentage / 2))]),
+            ''.join(["○" for i in range(5 - math.floor(percentage / 2))]),
             round(percentage, 2))
         tmp = progress_str + \
             "{0} of {1}\nETA: {2}".format(
@@ -142,8 +142,8 @@ async def download(dryb):
                 speed = downloader.get_speed()
                 elapsed_time = round(diff) * 1000
                 progress_str = "[{0}{1}]\nProgress: {2}%".format(
-                    ''.join(["█" for i in range(math.floor(percentage / 5))]),
-                    ''.join(["░" for i in range(20 - math.floor(percentage / 5))]),
+                    ''.join(["⬤" for i in range(math.floor(percentage / 2))]),
+                    ''.join(["○" for i in range(5 - math.floor(percentage / 2))]),
                     round(percentage, 2))
                 estimated_total_time = downloader.get_eta(human=True)
                 try:
@@ -319,8 +319,8 @@ async def upload_file(http, file_path, file_name, mime_type, event):
         if status:
             percentage = int(status.progress() * 100)
             progress_str = "[{0}{1}]\nProgress: {2}%\n".format(
-                ''.join(["█" for i in range(math.floor(percentage / 5))]),
-                ''.join(["░" for i in range(20 - math.floor(percentage / 5))]),
+                ''.join(["⬤" for i in range(math.floor(percentage / 2))]),
+                ''.join(["○" for i in range(5 - math.floor(percentage / 2))]),
                 round(percentage, 2))
             await event.edit(f"Uploading to Google Drive...\n\nFile Name: {file_name}\n{progress_str}")
     if file:
